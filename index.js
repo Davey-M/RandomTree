@@ -12,7 +12,7 @@ context.fillStyle = 'rgba(0,0,0,.01)';
 let points = [];
 let paths = [];
 
-const divergeChance = 50;
+const divergeChance = 100;
 const speed = 1;
 const maxPoints = 10000;
 
@@ -127,8 +127,10 @@ class Point
     }
 }
 
-let p1 = new Point(0, 0, .25 * Math.PI)
-let p2 = new Point(canvas.width, canvas.height, 1.25 * Math.PI)
+let p1 = new Point(1, 1, .25 * Math.PI);
+let p2 = new Point(canvas.width - 1, canvas.height - 1, 1.25 * Math.PI);
+let p3 = new Point(canvas.width - 1, 1, 1.75 * Math.PI);
+let p4 = new Point(1, canvas.height - 1, .75 * Math.PI);
 
 function loop()
 {
