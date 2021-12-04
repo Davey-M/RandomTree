@@ -12,7 +12,7 @@ context.fillStyle = 'rgba(0,0,0,.01)';
 let points = [];
 let paths = [];
 
-const divergeChance = 100;
+const divergeChance = 50;
 const speed = 1;
 const maxPoints = 10000;
 
