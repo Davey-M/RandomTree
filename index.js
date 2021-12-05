@@ -96,10 +96,12 @@ class Point
             else
             {
                 this.last.x = JSON.stringify(JSON.parse(this.x));
-                this.last.y = JSON.stringify(JSON.parse(this.y));
+                this.last.y = JSON.stringify(JSON.parse(this.y)); 
 
                 this.x = Math.sin(this.direction) * this.speed + this.x;
                 this.y = Math.cos(this.direction) * this.speed + this.y;
+                
+                this.direction += (Math.random() * .4) - .2;
 
                 this.sampler = context.getImageData(Math.sin(this.direction) * seeingDistance + this.x, Math.cos(this.direction) * seeingDistance + this.y, 1, 1);
 
