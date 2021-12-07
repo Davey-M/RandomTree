@@ -12,7 +12,7 @@ context.fillStyle = 'rgba(0,0,0,.01)';
 let points = [];
 let paths = [];
 
-const divergeChance = 50;
+const divergeChance = 100;
 const speed = 1;
 const maxPoints = 10000;
 
@@ -30,7 +30,7 @@ class Point
         this.y = y ?? 0;
         this.direction = direction ?? 0;
 
-        this.divergeA = (Math.random() * .5) * Math.PI;
+        this.divergeA = (Math.random() * .3) * Math.PI;
 
         this.last = {
             x: this.x,
@@ -81,11 +81,17 @@ class Point
             else if (Math.floor(Math.random() * divergeChance) == 0)
             {
                 // this.stopped = true;
+                let choice = Math.floor(Math.random() * 3);
 
-                if (Math.floor(Math.random() * 2) == 0)
+                if (choice == 0)
                 {
                     let newP = new Point(this.x, this.y, this.direction + this.divergeA);
                     this.direction -= this.divergeA;
+                }
+                else if (choice == 1)
+                {
+                    let newP = new Point(this.x, this.y, this.direction + this.divergeA);
+                    let newP2 = new Point(this.x, this.y, this.direction - this.divergeA);
                 }
                 else
                 {
