@@ -22,15 +22,15 @@ let paused = true;
 
 let rgby = Math.floor(Math.random() * 4);
 
-class Point
-{
-    constructor(x, y, direction)
-    {
+class Point {
+    constructor(x, y, direction, starter = false) {
         this.x = x ?? 0;
         this.y = y ?? 0;
         this.direction = direction ?? 0;
 
         this.divergeA = (Math.random() * .3) * Math.PI;
+
+        this.starter = starter;
 
         this.last = {
             x: this.x,
@@ -43,7 +43,7 @@ class Point
 
         // this.color = `rgb(${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)})`;
         let colorRand = Math.floor(Math.random() * 155) + 100;
-        switch(rgby) {
+        switch (rgby) {
             case 0:
                 this.color = `rgb(${colorRand}, 0, 0)`;
                 break;
@@ -59,73 +59,89 @@ class Point
         }
 
         this.sampler = {
-            data: [ 0 , 0 , 0 ],
+            data: [0, 0, 0],
         };
 
         this.index = points.length;
         points.push(this);
     }
 
-    move()
-    {
-        if (this.stopped == false)
-        {
+    move() {
+        if (this.stopped == false) {
             if (
                 this.sampler.data[0] != 0 ||
                 this.sampler.data[1] != 0 ||
                 this.sampler.data[2] != 0
-                )
-            {
+            ) {
                 this.stopped = true;
             }
-            else if (Math.floor(Math.random() * divergeChance) == 0)
-            {
+            else if (this.starter === true) {
+                this.movePointStraight();
+            }
+            else if (Math.floor(Math.random() * divergeChance) == 0) {
                 // this.stopped = true;
                 let choice = Math.floor(Math.random() * 3);
 
-                if (choice == 0)
-                {
+                if (choice == 0) {
                     new Point(this.x, this.y, this.direction + this.divergeA);
                     this.direction -= this.divergeA;
                 }
-                else if (choice == 1)
-                {
+                else if (choice == 1) {
                     new Point(this.x, this.y, this.direction + this.divergeA);
                     new Point(this.x, this.y, this.direction - this.divergeA);
                 }
-                else
-                {
+                else {
                     new Point(this.x, this.y, this.direction - this.divergeA);
                     this.direction += this.divergeA;
                 }
             }
-            else
-            {
-                this.last.x = JSON.stringify(JSON.parse(this.x));
-                this.last.y = JSON.stringify(JSON.parse(this.y)); 
-
-                this.x = Math.sin(this.direction) * this.speed + this.x;
-                this.y = Math.cos(this.direction) * this.speed + this.y;
-                
-                this.direction += (Math.random() * .4) - .2;
-
-                this.sampler = context.getImageData(Math.sin(this.direction) * seeingDistance + this.x, Math.cos(this.direction) * seeingDistance + this.y, 1, 1);
-
-                if (
-                    this.x < 0 ||
-                    this.x > canvas.width ||
-                    this.y < 0 ||
-                    this.y > canvas.height
-                )
-                {
-                    this.stopped = true;
-                }
+            else {
+                this.movePointsRandomly();
             }
         }
     }
 
-    draw()
-    {
+    movePointsRandomly() {
+        this.last.x = JSON.stringify(JSON.parse(this.x));
+        this.last.y = JSON.stringify(JSON.parse(this.y));
+
+        this.x = Math.sin(this.direction) * this.speed + this.x;
+        this.y = Math.cos(this.direction) * this.speed + this.y;
+
+        this.direction += (Math.random() * .4) - .2;
+
+        this.sampler = context.getImageData(Math.sin(this.direction) * seeingDistance + this.x, Math.cos(this.direction) * seeingDistance + this.y, 1, 1);
+
+        if (
+            this.x < 0 ||
+            this.x > canvas.width ||
+            this.y < 0 ||
+            this.y > canvas.height
+        ) {
+            this.stopped = true;
+        }
+    }
+
+    movePointStraight() {
+        this.last.x = JSON.stringify(JSON.parse(this.x));
+        this.last.y = JSON.stringify(JSON.parse(this.y));
+
+        this.x = Math.sin(this.direction) * this.speed + this.x;
+        this.y = Math.cos(this.direction) * this.speed + this.y;
+
+        this.sampler = context.getImageData(Math.sin(this.direction) * seeingDistance + this.x, Math.cos(this.direction) * seeingDistance + this.y, 1, 1);
+
+        if (
+            this.x < 0 ||
+            this.x > canvas.width ||
+            this.y < 0 ||
+            this.y > canvas.height
+        ) {
+            this.stopped = true;
+        }
+    }
+
+    draw() {
         context.strokeStyle = this.color;
 
         context.beginPath();
@@ -135,30 +151,25 @@ class Point
     }
 }
 
-let p1 = new Point(1, 1, .25 * Math.PI);
-let p2 = new Point(canvas.width - 1, canvas.height - 1, 1.25 * Math.PI);
-let p3 = new Point(canvas.width - 1, 1, 1.75 * Math.PI);
-let p4 = new Point(1, canvas.height - 1, .75 * Math.PI);
+let p1 = new Point(1, 1, .25 * Math.PI, true);
+let p2 = new Point(canvas.width - 1, canvas.height - 1, 1.25 * Math.PI, true);
+let p3 = new Point(canvas.width - 1, 1, 1.75 * Math.PI, true);
+let p4 = new Point(1, canvas.height - 1, .75 * Math.PI, true);
 
-function loop()
-{
+function loop() {
     // context.fillRect(0, 0, canvas.width, canvas.height);
 
-    for (let p of points)
-    {
+    for (let p of points) {
         p.move();
     }
 
-    for (let p of points)
-    {
+    for (let p of points) {
         p.draw();
     }
 
-    for (let i = 0; i < points.length; i++)
-    {
+    for (let i = 0; i < points.length; i++) {
         let p = points[i];
-        if (p.stopped == true)
-        {
+        if (p.stopped == true) {
             points.splice(i, 1);
         }
         else {
@@ -166,27 +177,22 @@ function loop()
         }
     }
 
-    if (paused == false && points.length < maxPoints && points.length > 0)
-    {
+    if (paused == false && points.length < maxPoints && points.length > 0) {
         window.requestAnimationFrame(loop);
     }
-    else
-    {
+    else {
         console.log('Paused');
         paused = true;
     }
 }
 
 window.addEventListener('keydown', e => {
-    if (e.key == 'Enter')
-    {
-        if (paused == false)
-        {
+    if (e.key == 'Enter') {
+        if (paused == false) {
             console.log('Paused');
             paused = true;
         }
-        else
-        {
+        else {
             console.log('Starting');
             paused = false;
             loop();
