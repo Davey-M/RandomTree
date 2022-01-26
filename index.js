@@ -85,17 +85,17 @@ class Point
 
                 if (choice == 0)
                 {
-                    let newP = new Point(this.x, this.y, this.direction + this.divergeA);
+                    new Point(this.x, this.y, this.direction + this.divergeA);
                     this.direction -= this.divergeA;
                 }
                 else if (choice == 1)
                 {
-                    let newP = new Point(this.x, this.y, this.direction + this.divergeA);
-                    let newP2 = new Point(this.x, this.y, this.direction - this.divergeA);
+                    new Point(this.x, this.y, this.direction + this.divergeA);
+                    new Point(this.x, this.y, this.direction - this.divergeA);
                 }
                 else
                 {
-                    let newP = new Point(this.x, this.y, this.direction - this.divergeA);
+                    new Point(this.x, this.y, this.direction - this.divergeA);
                     this.direction += this.divergeA;
                 }
             }
