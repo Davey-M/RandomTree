@@ -149,6 +149,14 @@ class Point {
         context.lineTo(this.x, this.y);
         context.stroke();
     }
+
+    setMovementTimeout() {
+        if (this.starter === true) {
+            setTimeout(() => {
+                this.starter = false;
+            }, 1000);    
+        }
+    }
 }
 
 let p1 = new Point(1, 1, .25 * Math.PI, true);
@@ -196,6 +204,11 @@ window.addEventListener('keydown', e => {
             console.log('Starting');
             paused = false;
             loop();
+
+            p1.setMovementTimeout();
+            p2.setMovementTimeout();
+            p3.setMovementTimeout();
+            p4.setMovementTimeout();
         }
     }
 })
