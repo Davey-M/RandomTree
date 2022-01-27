@@ -167,15 +167,11 @@ let p4 = new Point(1, canvas.height - 1, .75 * Math.PI, true);
 function loop() {
     // context.fillRect(0, 0, canvas.width, canvas.height);
 
-    for (let p of points) {
-        p.move();
-    }
-
-    for (let p of points) {
-        p.draw();
-    }
-
     for (let i = 0; i < points.length; i++) {
+
+        p.move()
+        p.draw()
+
         let p = points[i];
         if (p.stopped == true) {
             points.splice(i, 1);
