@@ -153,10 +153,24 @@ class Point {
     }
 }
 
-let p1 = new Point(1, 1, .25 * Math.PI, true, startingDegree);
-let p2 = new Point(canvas.width - 1, canvas.height - 1, 1.25 * Math.PI, true, startingDegree);
-let p3 = new Point(canvas.width - 1, 1, 1.75 * Math.PI, true, startingDegree);
-let p4 = new Point(1, canvas.height - 1, .75 * Math.PI, true, startingDegree);
+// let p1 = new Point(1, 1, .25 * Math.PI, true, startingDegree);
+// let p2 = new Point(canvas.width - 1, canvas.height - 1, 1.25 * Math.PI, true, startingDegree);
+// let p3 = new Point(canvas.width - 1, 1, 1.75 * Math.PI, true, startingDegree);
+// let p4 = new Point(1, canvas.height - 1, .75 * Math.PI, true, startingDegree);
+
+// let p1 = new Point(1, 1, .25 * Math.PI, true, Math.floor(Math.random() * 360));
+// let p2 = new Point(canvas.width - 1, canvas.height - 1, 1.25 * Math.PI, true, Math.floor(Math.random() * 360));
+// let p3 = new Point(canvas.width - 1, 1, 1.75 * Math.PI, true, Math.floor(Math.random() * 360));
+// let p4 = new Point(1, canvas.height - 1, .75 * Math.PI, true, Math.floor(Math.random() * 360));
+
+let canvasChunk = canvas.width / 9;
+for (let i = 1; i <= 8; i++) {
+    new Point(i * canvasChunk, 1, 0, true, startingDegree);
+}
+
+// for (let i = 0; i < 10; i++) {
+//     new Point(Math.floor(Math.random() * canvas.width), Math.floor(Math.random() * canvas.height), Math.floor(Math.random() * (2 * Math.PI)), false, Math.floor(Math.random() * 360));
+// }
 
 function loop() {
     // context.fillRect(0, 0, canvas.width, canvas.height);
@@ -199,10 +213,9 @@ window.addEventListener('keydown', e => {
             paused = false;
             loop();
 
-            p1.setMovementTimeout();
-            p2.setMovementTimeout();
-            p3.setMovementTimeout();
-            p4.setMovementTimeout();
+            for (let p of points) {
+                p.setMovementTimeout();
+            }
         }
     }
 })
