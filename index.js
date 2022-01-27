@@ -4,7 +4,7 @@ const context = canvas.getContext('2d');
 canvas.width = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
 
-context.lineWidth = 2;
+context.lineWidth = 1;
 context.lineCap = 'round';
 context.strokeStyle = '#ffffff';
 context.fillStyle = 'rgba(0,0,0,.01)';
@@ -12,7 +12,7 @@ context.fillStyle = 'rgba(0,0,0,.01)';
 let points = [];
 let paths = [];
 
-const divergeChance = 100;
+const divergeChance = 20;
 const speed = 1;
 const maxPoints = 10000;
 
@@ -64,13 +64,13 @@ class Point {
                 this.sampler.data[1] != 0 ||
                 this.sampler.data[2] != 0
             ) {
-                this.stopped = true;
+                this.stop();
             }
             else if (this.starter === true) {
                 this.movePointStraight();
             }
             else if (Math.floor(Math.random() * divergeChance) == 0) {
-                // this.stopped = true;
+                // this.stop();
                 let choice = Math.floor(Math.random() * 3);
 
                 if (choice == 0) {
@@ -109,7 +109,7 @@ class Point {
             this.y < 0 ||
             this.y > canvas.height
         ) {
-            this.stopped = true;
+            this.stop();
         }
     }
 
@@ -128,7 +128,7 @@ class Point {
             this.y < 0 ||
             this.y > canvas.height
         ) {
-            this.stopped = true;
+            this.stop();
         }
     }
 
@@ -150,6 +150,10 @@ class Point {
                 this.starter = false;
             }, 1000);    
         }
+    }
+
+    stop() {
+        this.stopped = true;
     }
 }
 
@@ -175,16 +179,13 @@ for (let i = 1; i <= 8; i++) {
 function loop() {
     // context.fillRect(0, 0, canvas.width, canvas.height);
 
-    for (let p of points) {
-        p.move();
-    }
-
-    for (let p of points) {
-        p.draw();
-    }
-
     for (let i = 0; i < points.length; i++) {
         let p = points[i];
+
+        p.move()
+
+        p.draw()
+
         if (p.stopped == true) {
             points.splice(i, 1);
         }
