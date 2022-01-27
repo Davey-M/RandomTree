@@ -162,15 +162,15 @@ class Point {
 // let p3 = new Point(canvas.width - 1, 1, 1.75 * Math.PI, true, startingDegree);
 // let p4 = new Point(1, canvas.height - 1, .75 * Math.PI, true, startingDegree);
 
-// let p1 = new Point(1, 1, .25 * Math.PI, true, Math.floor(Math.random() * 360));
-// let p2 = new Point(canvas.width - 1, canvas.height - 1, 1.25 * Math.PI, true, Math.floor(Math.random() * 360));
-// let p3 = new Point(canvas.width - 1, 1, 1.75 * Math.PI, true, Math.floor(Math.random() * 360));
-// let p4 = new Point(1, canvas.height - 1, .75 * Math.PI, true, Math.floor(Math.random() * 360));
+let p1 = new Point(1, 1, .25 * Math.PI, true, Math.floor(Math.random() * 360));
+let p2 = new Point(canvas.width - 1, canvas.height - 1, 1.25 * Math.PI, true, Math.floor(Math.random() * 360));
+let p3 = new Point(canvas.width - 1, 1, 1.75 * Math.PI, true, Math.floor(Math.random() * 360));
+let p4 = new Point(1, canvas.height - 1, .75 * Math.PI, true, Math.floor(Math.random() * 360));
 
-let canvasChunk = canvas.width / 9;
-for (let i = 1; i <= 8; i++) {
-    new Point(i * canvasChunk, 1, 0, true, startingDegree);
-}
+// let canvasChunk = canvas.width / 9;
+// for (let i = 1; i <= 8; i++) {
+//     new Point(i * canvasChunk, 1, 0, true, startingDegree);
+// }
 
 // for (let i = 0; i < 10; i++) {
 //     new Point(Math.floor(Math.random() * canvas.width), Math.floor(Math.random() * canvas.height), Math.floor(Math.random() * (2 * Math.PI)), false, Math.floor(Math.random() * 360));
