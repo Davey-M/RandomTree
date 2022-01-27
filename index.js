@@ -4,7 +4,7 @@ const context = canvas.getContext('2d');
 canvas.width = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
 
-context.lineWidth = 2;
+context.lineWidth = 1;
 context.lineCap = 'round';
 context.strokeStyle = '#ffffff';
 context.fillStyle = 'rgba(0,0,0,.01)';
@@ -12,7 +12,7 @@ context.fillStyle = 'rgba(0,0,0,.01)';
 let points = [];
 let paths = [];
 
-const divergeChance = 100;
+const divergeChance = 20;
 const speed = 1;
 const maxPoints = 10000;
 
@@ -20,10 +20,10 @@ const seeingDistance = 3;
 
 let paused = true;
 
-let rgby = Math.floor(Math.random() * 4);
+const startingDegree = Math.floor(Math.random() * 360);
 
 class Point {
-    constructor(x, y, direction, starter = false) {
+    constructor(x, y, direction, starter = false, degrees) {
         this.x = x ?? 0;
         this.y = y ?? 0;
         this.direction = direction ?? 0;
@@ -41,22 +41,9 @@ class Point {
 
         this.speed = speed;
 
-        // this.color = `rgb(${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)})`;
-        let colorRand = Math.floor(Math.random() * 155) + 100;
-        switch (rgby) {
-            case 0:
-                this.color = `rgb(${colorRand}, 0, 0)`;
-                break;
-            case 1:
-                this.color = `rgb(0, ${colorRand}, 0)`;
-                break;
-            case 2:
-                this.color = `rgb(0, 0, ${colorRand})`;
-                break;
-            case 3:
-                this.color = `rgb(${colorRand}, ${colorRand}, 0)`;
-                break;
-        }
+        this.degrees = degrees ?? 0;
+
+        this.setColor(this.degrees);
 
         this.sampler = {
             data: [0, 0, 0],
@@ -66,6 +53,10 @@ class Point {
         points.push(this);
     }
 
+    setColor(degrees) {
+        this.color = `hsl(${degrees}, 100%, 50%)`;
+    }
+
     move() {
         if (this.stopped == false) {
             if (
@@ -73,25 +64,25 @@ class Point {
                 this.sampler.data[1] != 0 ||
                 this.sampler.data[2] != 0
             ) {
-                this.stopped = true;
+                this.stop();
             }
             else if (this.starter === true) {
                 this.movePointStraight();
             }
             else if (Math.floor(Math.random() * divergeChance) == 0) {
-                // this.stopped = true;
+                // this.stop();
                 let choice = Math.floor(Math.random() * 3);
 
                 if (choice == 0) {
-                    new Point(this.x, this.y, this.direction + this.divergeA);
+                    new Point(this.x, this.y, this.direction + this.divergeA, false, this.degrees);
                     this.direction -= this.divergeA;
                 }
                 else if (choice == 1) {
-                    new Point(this.x, this.y, this.direction + this.divergeA);
-                    new Point(this.x, this.y, this.direction - this.divergeA);
+                    new Point(this.x, this.y, this.direction + this.divergeA, false, this.degrees);
+                    new Point(this.x, this.y, this.direction - this.divergeA, false, this.degrees);
                 }
                 else {
-                    new Point(this.x, this.y, this.direction - this.divergeA);
+                    new Point(this.x, this.y, this.direction - this.divergeA, false, this.degrees);
                     this.direction += this.divergeA;
                 }
             }
@@ -118,7 +109,7 @@ class Point {
             this.y < 0 ||
             this.y > canvas.height
         ) {
-            this.stopped = true;
+            this.stop();
         }
     }
 
@@ -137,11 +128,14 @@ class Point {
             this.y < 0 ||
             this.y > canvas.height
         ) {
-            this.stopped = true;
+            this.stop();
         }
     }
 
     draw() {
+        this.setColor(this.degrees);
+        this.degrees = this.degrees < 360 ? this.degrees + .1 : 0;
+
         context.strokeStyle = this.color;
 
         context.beginPath();
@@ -157,22 +151,40 @@ class Point {
             }, 1000);    
         }
     }
+
+    stop() {
+        this.stopped = true;
+    }
 }
 
-let p1 = new Point(1, 1, .25 * Math.PI, true);
-let p2 = new Point(canvas.width - 1, canvas.height - 1, 1.25 * Math.PI, true);
-let p3 = new Point(canvas.width - 1, 1, 1.75 * Math.PI, true);
-let p4 = new Point(1, canvas.height - 1, .75 * Math.PI, true);
+// let p1 = new Point(1, 1, .25 * Math.PI, true, startingDegree);
+// let p2 = new Point(canvas.width - 1, canvas.height - 1, 1.25 * Math.PI, true, startingDegree);
+// let p3 = new Point(canvas.width - 1, 1, 1.75 * Math.PI, true, startingDegree);
+// let p4 = new Point(1, canvas.height - 1, .75 * Math.PI, true, startingDegree);
+
+// let p1 = new Point(1, 1, .25 * Math.PI, true, Math.floor(Math.random() * 360));
+// let p2 = new Point(canvas.width - 1, canvas.height - 1, 1.25 * Math.PI, true, Math.floor(Math.random() * 360));
+// let p3 = new Point(canvas.width - 1, 1, 1.75 * Math.PI, true, Math.floor(Math.random() * 360));
+// let p4 = new Point(1, canvas.height - 1, .75 * Math.PI, true, Math.floor(Math.random() * 360));
+
+let canvasChunk = canvas.width / 9;
+for (let i = 1; i <= 8; i++) {
+    new Point(i * canvasChunk, 1, 0, true, startingDegree);
+}
+
+// for (let i = 0; i < 10; i++) {
+//     new Point(Math.floor(Math.random() * canvas.width), Math.floor(Math.random() * canvas.height), Math.floor(Math.random() * (2 * Math.PI)), false, Math.floor(Math.random() * 360));
+// }
 
 function loop() {
     // context.fillRect(0, 0, canvas.width, canvas.height);
-
     for (let i = 0; i < points.length; i++) {
+        let p = points[i];
 
         p.move()
+
         p.draw()
 
-        let p = points[i];
         if (p.stopped == true) {
             points.splice(i, 1);
         }
@@ -201,10 +213,9 @@ window.addEventListener('keydown', e => {
             paused = false;
             loop();
 
-            p1.setMovementTimeout();
-            p2.setMovementTimeout();
-            p3.setMovementTimeout();
-            p4.setMovementTimeout();
+            for (let p of points) {
+                p.setMovementTimeout();
+            }
         }
     }
 })
