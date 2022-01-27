@@ -177,9 +177,9 @@ function setup() {
     //     new Point(i * canvasChunk, 1, 0, true, startingDegree);
     // }
 
-    // for (let i = 0; i < 100; i++) {
-    //     new Point(Math.floor(Math.random() * canvas.width), Math.floor(Math.random() * canvas.height), Math.floor(Math.random() * (2 * Math.PI)), false, Math.floor(Math.random() * 360));
-    // }
+    for (let i = 0; i < 100; i++) {
+        new Point(Math.floor(Math.random() * canvas.width), Math.floor(Math.random() * canvas.height), Math.floor(Math.random() * (2 * Math.PI)), false, Math.floor(Math.random() * 360));
+    }
 
     loop();
 }
